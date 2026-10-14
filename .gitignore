@@ -1,0 +1,3 @@
+/_archive/
+/uploads/*
+!/uploads/.htaccess

@@ -1,0 +1,4 @@
+# โฟลเดอร์เก็บรูปที่ผู้ใช้อัปโหลด: ห้ามรันไฟล์ PHP ในนี้
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
