@@ -1,4 +1,5 @@
--- GreenLoop: 10 ตาราง + ข้อมูลตัวอย่าง (นำเข้าผ่าน phpMyAdmin > Import)
+-- GreenLoop: ติดตั้งใหม่ 10 ตาราง + ข้อมูลตัวอย่าง
+-- นำเข้าผ่าน phpMyAdmin > Import; คำสั่งนี้ลบฐานข้อมูล greenloop เดิมก่อนสร้างใหม่
 DROP DATABASE IF EXISTS greenloop;
 CREATE DATABASE greenloop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE greenloop;
