@@ -1,4 +1,4 @@
--- GreenLoop: ติดตั้งใหม่ 10 ตาราง + ข้อมูลตัวอย่าง
+-- GreenLoop: ติดตั้งใหม่ 8 ตาราง + ข้อมูลตัวอย่าง
 -- นำเข้าผ่าน phpMyAdmin > Import; คำสั่งนี้ลบฐานข้อมูล greenloop เดิมก่อนสร้างใหม่
 DROP DATABASE IF EXISTS greenloop;
 CREATE DATABASE greenloop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -20,29 +20,11 @@ CREATE TABLE users (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- ค่าสัมประสิทธิ์การปล่อยคาร์บอน: kgCO2e ต่อ 1 หน่วยที่ใช้ต่อเดือน
-CREATE TABLE factors (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    unit VARCHAR(30) NOT NULL,
-    factor DECIMAL(8,3) NOT NULL
-);
-
 -- หมวดขยะอิเล็กทรอนิกส์: kgCO2e ที่ลดได้เมื่อรีไซเคิล 1 กก.
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     co2_per_kg DECIMAL(6,2) NOT NULL
-);
-
-CREATE TABLE footprints (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    year SMALLINT NOT NULL,
-    total_kg DECIMAL(10,2) NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (user_id, year),
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE rewards (
@@ -137,24 +119,11 @@ INSERT INTO users (id, name, email, phone, password, question, answer, role, poi
 INSERT INTO point_transactions (user_id, amount, description, related_type)
 SELECT id, points, 'ยอดแต้มตั้งต้นก่อนเริ่มบันทึกประวัติ', 'opening' FROM users;
 
-INSERT INTO factors (name, unit, factor) VALUES
-('ไฟฟ้าที่ใช้ในบ้าน', 'หน่วย (kWh)', 0.5),
-('น้ำมันเบนซิน', 'ลิตร', 2.2),
-('ก๊าซหุงต้ม', 'กก.', 3.1),
-('ขยะทั่วไปที่ทิ้ง', 'กก.', 0.7),
-('มื้ออาหารที่มีเนื้อสัตว์', 'มื้อ', 1.5);
-
 INSERT INTO categories (id, name, co2_per_kg) VALUES
 (1, 'โทรศัพท์ / แท็บเล็ต', 2.0),
 (2, 'คอมพิวเตอร์ / โน้ตบุ๊ก', 1.8),
 (3, 'แบตเตอรี่ / สายชาร์จ', 2.5),
 (4, 'อุปกรณ์ IT อื่นๆ', 1.5);
-
-INSERT INTO footprints (user_id, year, total_kg, created_at) VALUES
-(2, YEAR(NOW()) - 1, 3700, NOW() - INTERVAL 118 DAY),
-(2, YEAR(NOW()), 3040, NOW() - INTERVAL 30 DAY),
-(3, YEAR(NOW()), 2310, NOW() - INTERVAL 70 DAY),
-(4, YEAR(NOW()), 4400, NOW() - INTERVAL 38 DAY);
 
 INSERT INTO recycles (user_id, category_id, item_name, weight_kg, status, points, co2_kg, created_at) VALUES
 (2, 1, 'โทรศัพท์เก่าเปิดไม่ติด', 0.4, 'done', 8, 0.80, NOW() - INTERVAL 97 DAY),
