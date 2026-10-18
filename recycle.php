@@ -30,26 +30,45 @@ $saved = val("SELECT COALESCE(SUM(co2_kg), 0) FROM recycles WHERE user_id = ? AN
 
 head('รีไซเคิล');
 ?>
-<div class="hero text-center mb-4">
-  <p class="lead mb-0">🌱 คาร์บอนที่ลดได้จากการรีไซเคิลในปี <?= $year + 543 ?></p>
-  <div class="big"><?= number_format($saved, 2) ?> kgCO₂e</div>
-  <p class="mb-0">ส่งขยะอิเล็กทรอนิกส์ของคุณไปรีไซเคิล เพื่อช่วยลดผลกระทบต่อสิ่งแวดล้อม</p>
+<div class="hero page-hero recycle-hero mb-4">
+  <div class="page-hero-copy">
+    <span class="page-hero-eyebrow">RECYCLE &amp; MAKE A DIFFERENCE</span>
+    <p class="lead mb-1">🌱 คาร์บอนที่ลดได้ในปี <?= $year + 543 ?></p>
+    <div class="big"><?= number_format($saved, 2) ?> <span>kgCO₂e</span></div>
+    <p class="mb-0">ส่งต่อขยะอิเล็กทรอนิกส์ให้กลับมาใช้ประโยชน์ และช่วยลดผลกระทบต่อสิ่งแวดล้อม</p>
+  </div>
+  <div class="page-hero-art recycle-hero-art" aria-hidden="true">
+    <span class="hero-art-ring"></span>
+    <span class="hero-art-icon">📦</span>
+    <span class="hero-art-spark">✦</span>
+    <span class="hero-art-leaf">🌿</span>
+  </div>
 </div>
 
-<form method="post" enctype="multipart/form-data" class="card card-body mb-4">
-  <h5 id="recycle-form">♻️ แจ้งรีไซเคิล</h5>
-  <label class="form-label mt-2">หมวดอุปกรณ์</label>
-  <select class="form-select" id="recycle-category" name="category_id" required>
-    <option value="">เลือกหมวด</option>
-    <?php foreach ($cats as $c): ?>
-      <option value="<?= $c['id'] ?>" data-factor="<?= e($c['co2_per_kg']) ?>"><?= e($c['name']) ?> (ลด <?= $c['co2_per_kg'] ?> kgCO₂e ต่อ กก.)</option>
-    <?php endforeach; ?>
-  </select>
-  <?php input('รายการ', 'item_name', 'text', '', 'required minlength="3"') ?>
-  <?php input('น้ำหนักโดยประมาณ (กก.)', 'weight_kg', 'number', '', 'required min="0.01" step="0.01" id="recycle-weight"') ?>
-  <div id="recycle-estimate" class="form-text mt-2" aria-live="polite">เลือกหมวดและกรอกน้ำหนักเพื่อดูปริมาณคาร์บอนที่คาดว่าจะลดได้</div>
-  <?php input('รูปสินค้าที่จะรีไซเคิล (ไม่บังคับ JPG PNG GIF ไม่เกิน 2MB)', 'image', 'file', '', 'accept="image/*"') ?>
-  <button class="btn btn-success mt-3">ส่งคำขอ</button>
+<form method="post" enctype="multipart/form-data" class="card recycle-form-card mb-4">
+  <aside class="recycle-form-aside">
+    <span class="form-aside-icon" aria-hidden="true">♻️</span>
+    <span class="page-hero-eyebrow">GIVE IT A NEW LIFE</span>
+    <h2>เริ่มต้นจากของชิ้นเล็ก ๆ</h2>
+    <p>แจ้งข้อมูลอุปกรณ์และน้ำหนักโดยประมาณ ทีมงานจะตรวจสอบก่อนยืนยันผลการรีไซเคิล</p>
+    <div class="form-aside-note">✨ รับ <?= POINT_PER_KG ?> แต้มต่อขยะที่รีไซเคิลสำเร็จ 1 กก.</div>
+  </aside>
+  <div class="recycle-form-fields">
+    <h5 id="recycle-form">แจ้งรายการรีไซเคิล</h5>
+    <p class="text-muted mb-3">กรอกข้อมูลอุปกรณ์ที่ต้องการส่งรีไซเคิล</p>
+    <label class="form-label mt-2">หมวดอุปกรณ์</label>
+    <select class="form-select" id="recycle-category" name="category_id" required>
+      <option value="">เลือกหมวด</option>
+      <?php foreach ($cats as $c): ?>
+        <option value="<?= $c['id'] ?>" data-factor="<?= e($c['co2_per_kg']) ?>"><?= e($c['name']) ?> (ลด <?= $c['co2_per_kg'] ?> kgCO₂e ต่อ กก.)</option>
+      <?php endforeach; ?>
+    </select>
+    <?php input('รายการ', 'item_name', 'text', '', 'required minlength="3"') ?>
+    <?php input('น้ำหนักโดยประมาณ (กก.)', 'weight_kg', 'number', '', 'required min="0.01" step="0.01" id="recycle-weight"') ?>
+    <div id="recycle-estimate" class="form-text mt-2" aria-live="polite">เลือกหมวดและกรอกน้ำหนักเพื่อดูปริมาณคาร์บอนที่คาดว่าจะลดได้</div>
+    <?php input('รูปสินค้าที่จะรีไซเคิล (ไม่บังคับ JPG PNG GIF ไม่เกิน 2MB)', 'image', 'file', '', 'accept="image/*"') ?>
+    <button class="btn btn-success mt-3">ส่งคำขอ</button>
+  </div>
 </form>
 <script>
   const recycleCategory = document.getElementById('recycle-category');
@@ -69,7 +88,7 @@ head('รีไซเคิล');
   recycleWeight.addEventListener('input', updateRecycleEstimate);
 </script>
 
-<h5>คำขอของฉัน</h5>
+<h5 class="page-section-title">คำขอของฉัน</h5>
 <?php search('<select class="form-select w-auto" name="sort"><option value="">ใหม่ล่าสุด</option><option value="weight"' . (g('sort') == 'weight' ? ' selected' : '') . '>น้ำหนักมากสุด</option></select>') ?>
 <div class="table-responsive">
 <table class="table table-striped bg-white align-middle">
